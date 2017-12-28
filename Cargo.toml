@@ -4,3 +4,9 @@ version = "0.1.0"
 authors = ["Justin Rhude <justin.rhude52@gmail.com>"]
 
 [dependencies]
+serenity = "0.4"
+
+#[dependencies.serenity]
+#git = "https://github.com/zeyla/serenity.git"
+#default-features = false
+#features = ["pick", "your", "feature", "names", "here"]
