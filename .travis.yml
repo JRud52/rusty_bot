@@ -1,0 +1,14 @@
+language: rust
+cache: cargo
+dist: trusty
+os:
+  - linux
+
+# Run builds on all the supported tracks
+rust:
+  - nightly
+
+# Run build and test commands
+script:
+  - cargo build --verbose --all
+  - cargo test --verbose --all
