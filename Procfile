@@ -1,1 +1,1 @@
-web: ./target/release/hello
+web: ./target/release/rusty_bot
