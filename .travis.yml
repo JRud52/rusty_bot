@@ -1,4 +1,8 @@
 language: rust
+
+sudo: false
+
+# Cache crates; only update if they are outdated
 cache: cargo
 dist: trusty
 os:
@@ -6,9 +10,49 @@ os:
 
 # Run builds on all the supported tracks
 rust:
-  - nightly
+    - stable
+    - beta
+    - nightly
+
+# Ignore failures on nightly track
+matrix:
+  allow_failures:
+    - rust: nightly
+
+# Set environment variables
+env:
+  global:
+  - RUSTFLAGS="-C link-dead-code"
+
+# Install relevant packages for codecov
+addons:
+  apt:
+    packages:
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+      - cmake
+      - gcc
+      - binutils-dev
+      - libiberty-dev
 
 # Run build and test commands
 script:
   - cargo build --verbose --all
   - cargo test --verbose --all
+
+# Get and run codecov
+after_success: |
+  wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
+  tar xzf master.tar.gz &&
+  cd kcov-master &&
+  mkdir build &&
+  cd build &&
+  cmake .. &&
+  make &&
+  make install DESTDIR=../../kcov-build &&
+  cd ../.. &&
+  rm -rf kcov-master &&
+  for file in target/debug/*[^\.d]; do mkdir -p "target/cov/$(basename $file)"; ./kcov-build/usr/local/bin/kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename $file)" "$file"; done &&
+  bash <(curl -s https://codecov.io/bash) &&
+  echo "Uploaded code coverage"
