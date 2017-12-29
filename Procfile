@@ -1,1 +1,1 @@
-web: ./target/release/rusty_bot
+worker: ./target/release/rusty_bot
