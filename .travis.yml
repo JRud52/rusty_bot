@@ -45,7 +45,7 @@ script:
 #  on:
 #    branch: master
 notifications:
-  webhooks: RUSTY_DISCORD_WEBHOOK
+  webhooks: $RUSTY_DISCORD_WEBHOOK
     on_success: always # default: always
     on_failure: always # default: always
     on_start: never   # default: never
