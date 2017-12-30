@@ -28,7 +28,7 @@ impl EventHandler for Handler {
 
         if !(cfg!(debug_assertions)){
             let bot_channel = ChannelId(395989933539459074);
-            let _ = bot_channel.say(format!("rusty_bot version {} is running...", VERSION));
+            let _ = bot_channel.say(format!("This server is now running rusty_bot version {}", VERSION));
         }
     }
 

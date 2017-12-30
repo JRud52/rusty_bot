@@ -44,3 +44,11 @@ script:
 #  app: rusty-bot-discord
 #  on:
 #    branch: master
+notifications:
+  webhooks: RUSTY_DISCORD_WEBHOOK
+    on_success: always # default: always
+    on_failure: always # default: always
+    on_start: never   # default: never
+    on_cancel: always # default: always
+    on_error: always # default: always
+
