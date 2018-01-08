@@ -2,21 +2,20 @@
 #[macro_use] extern crate serenity;
 
 extern crate requests;
-extern crate serde_json;
 
 mod commands;
 
+use serenity::client::Client;
 use serenity::framework::standard::{help_commands, StandardFramework};
+use serenity::http;
 use serenity::model::event::ResumedEvent;
 use serenity::model::{Ready, ChannelId, Message};
-use serenity::client::Client;
 use serenity::prelude::*;
-use serenity::http;
 
 use std::collections::HashSet;
 
-const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 const RUSTY_TOKEN: &'static str = env!("RUSTY_TOKEN");
+const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 struct Handler;
 
