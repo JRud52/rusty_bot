@@ -1,13 +1,14 @@
 [package]
 name = "rusty_bot"
-version = "0.1.1"
+version = "0.1.2"
 description = "Discord bot that was created for a specific server. Written in Rust"
 homepage = "https://jrud52.github.io/rusty_bot"
 authors = ["Justin Rhude <justin.rhude52@gmail.com>"]
 
 [dependencies]
-kankyo = "~0.1"
-log = "~0.3"
+kankyo = "0.1"
+log = "0.3"
+requests = "0.0.30"
 
 [dependencies.serenity]
 git = "https://github.com/zeyla/serenity.git"

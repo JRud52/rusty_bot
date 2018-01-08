@@ -1,39 +1,36 @@
-#[macro_use] extern crate log;
+//#[macro_use] extern crate log;
 #[macro_use] extern crate serenity;
 
-extern crate kankyo;
+extern crate requests;
 
 mod commands;
 
-use serenity::framework::StandardFramework;
-use serenity::model::event::ResumedEvent;
-use serenity::model::ChannelId;
-use serenity::model::Ready;
-use serenity::model::Message;
-use serenity::prelude::*;
-use serenity::http;
-use std::collections::HashSet;
-use std::env;
-
 use serenity::client::Client;
-use serenity::prelude::EventHandler;
+use serenity::framework::standard::{help_commands, StandardFramework};
+use serenity::http;
+use serenity::model::event::ResumedEvent;
+use serenity::model::{Ready, ChannelId, Message};
+use serenity::prelude::*;
 
+use std::collections::HashSet;
+
+const RUSTY_TOKEN: &'static str = env!("RUSTY_TOKEN");
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 struct Handler;
 
 impl EventHandler for Handler {
     fn on_ready(&self, _: Context, ready: Ready) {
-        info!("Connected as {}", ready.user.name);
+        println!("Connected as {}", ready.user.name);
 
         if !(cfg!(debug_assertions)){
             let bot_channel = ChannelId(395989933539459074);
-            let _ = bot_channel.say(format!("rusty_bot version {} is running...", VERSION));
+            let _ = bot_channel.say(format!("This server is now running rusty_bot version {}", VERSION));
         }
     }
 
     fn on_resume(&self, _: Context, _: ResumedEvent) {
-        info!("Resumed");
+        println!("Resumed");
     }
 
     fn on_message(&self, _: Context, msg: Message) {
@@ -47,7 +44,7 @@ impl EventHandler for Handler {
 
 fn main() {
     // Login with a bot token from the environment
-    let mut client = Client::new(&env::var("RUSTY_TOKEN").expect("token"), Handler);
+    let mut client = Client::new(RUSTY_TOKEN, Handler);
 
     let owners = match http::get_current_application_info() {
         Ok(info) => {
@@ -64,18 +61,55 @@ fn main() {
             .owners(owners)
             .prefix("~"))
 
-        // Meta commands
-        .command("ping", |c| c.exec(commands::meta::ping))
-        .command("latency", |c| c.exec(commands::meta::latency))
-        .command("version", |c| c.exec(commands::meta::version))
-        .command("info", |c| c.exec(commands::meta::info))
+        .before(|_ctx, msg, command_name| {
+            println!("Got command '{}' by user '{}'",
+                     command_name,
+                     msg.author.name);
+            true // if `before` returns false, command processing doesn't happen.
+        })
+        .after(|_, _, command_name, error| {
+            match error {
+                Ok(()) => println!("Processed command '{}'", command_name),
+                Err(why) => println!("Command '{}' returned error {:?}", command_name, why),
+            }
+        })
 
-        // Owner only commands
-        .command("quit", |c| c
-            .exec(commands::owner::quit)
-            .owners_only(true)));
+        .group( "Utility", |g| g
+            .command("help", |c| c
+                .exec_help(help_commands::with_embeds))
+
+            .command("ping", |c| c
+                .desc("Responds with 'Pong!'.")
+                .exec_str("Pong!"))
+
+            .command("latency", |c| c
+                .desc("Responds with the latency of the server.")
+                .exec(commands::meta::latency))
+
+            .command("version", |c| c
+                .desc("Responds with the version number of the currently running bot.")
+                .exec(commands::meta::version))
+
+            .command("info", |c| c
+                .desc("Responds with the details of the bot.")
+                .exec(commands::meta::info))
+        )
+
+        .group( "World of Warcraft", |g| g
+            .command("realm", |c| c
+                .desc("Responds with the status of the specified realm.")
+                .exec(commands::wow::realm))
+        )
+
+        .group("Owner only", |g| g
+            .owners_only(true)
+            .command("quit", |c| c
+                .desc("Shuts down the bot(owner only command).")
+                .exec(commands::owner::quit))
+        )
+    );
 
     if let Err(why) = client.start() {
-        error!("Client error: {:?}", why);
+        panic!("Client error: {:?}", why);
     }
 }

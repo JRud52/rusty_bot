@@ -14,10 +14,6 @@ command!(latency(ctx, msg) {
     let _ = msg.channel_id.say(latency);
 });
 
-command!(ping(_ctx, msg) {
-    let _ = msg.channel_id.say("Pong!");
-});
-
 command!(version(_ctx, msg) {
     let _ = msg.channel_id;
     let _ = msg.channel_id.say(env!("CARGO_PKG_VERSION"));
@@ -26,7 +22,7 @@ command!(version(_ctx, msg) {
 command!(info(_ctx, msg) {
     let _ = msg.channel_id.say(format!(
     "```yaml\n\
-    Name:   {}\n\
+    Name:           {}\n\
     Version:        {}\n\
     Homepage:       '{}'\n\
     Authors:        {}\n\
