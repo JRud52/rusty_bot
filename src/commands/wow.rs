@@ -29,20 +29,40 @@ command!(realm(_ctx, msg, args) {
     if res.status_code() == StatusCode::Ok {
         let _ = msg.channel_id.send_message(|m| m
             .embed(|e| e
-            .title(format!("{} Status", data["realms"][0]["name"]))
-            .description(
-                format!(    "Status:        {}\n\
-                            Type:           {}\n\
-                            Pop:            {}\n\
-                            Queue:          {}\n\
-                            BattleGroup:    {}"
-
-                , data["realms"][0]["status"]
-                , data["realms"][0]["type"]
-                , data["realms"][0]["population"]
-                , data["realms"][0]["queue"]
-                , data["realms"][0]["battlegroup"])
-            )));
+                .title(format!("{}", data["realms"][0]["name"]))
+                .field(|f| f
+                    .name("Status")
+                    .value(format!("{}", data["realms"][0]["status"]))
+                    .inline(false))
+                .field(|f| f
+                    .name("Type")
+                    .value(format!("{}", data["realms"][0]["type"]))
+                    .inline(false))
+                .field(|f| f
+                    .name("Population")
+                    .value(format!("{}", data["realms"][0]["population"]))
+                    .inline(false))
+                .field(|f| f
+                    .name("Queue")
+                    .value(format!("{}", data["realms"][0]["queue"]))
+                    .inline(false))
+                .field(|f| f
+                    .name("BattleGroup")
+                    .value(format!("{}", data["realms"][0]["battlegroup"]))
+                    .inline(false))
+//                .description(
+//                    format!(    "Status:        {}\n\
+//                                Type:           {}\n\
+//                                Pop:            {}\n\
+//                                Queue:          {}\n\
+//                                BattleGroup:    {}"
+//
+//                    , data["realms"][0]["status"]
+//                    , data["realms"][0]["type"]
+//                    , data["realms"][0]["population"]
+//                    , data["realms"][0]["queue"]
+//                    , data["realms"][0]["battlegroup"]))
+            ));
     } else {
         let _ = msg.channel_id.say(format!("@{} That is not a valid realm name.", msg.author));
     }
