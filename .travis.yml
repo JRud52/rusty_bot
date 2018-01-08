@@ -1,29 +1,34 @@
-language: rust
-sudo: false
-cache: cargo
-dist: trusty
-os:
-- linux
-rust:
-- nightly
-env:
-  global:
-  - RUSTFLAGS="-C link-dead-code"
-addons:
-  apt:
-    packages:
-    - libcurl4-openssl-dev
-    - libssl-dev
-    - openssl
-    - libelf-dev
-    - libdw-dev
-    - cmake
-    - gcc
-    - binutils-dev
-    - libiberty-dev
-script:
-- cargo build --verbose --all
-- cargo test --verbose --all
+# Travis
+
+#language: rust
+#sudo: false
+#cache: cargo
+#dist: trusty
+#os:
+#- linux
+#rust:
+#- nightly
+#env:
+#  global:
+#  - RUSTFLAGS="-C link-dead-code"
+#addons:
+#  apt:
+#    packages:
+#    - libcurl4-openssl-dev
+#    - libssl-dev
+#    - openssl
+#    - libelf-dev
+#    - libdw-dev
+#    - cmake
+#    - gcc
+#    - binutils-dev
+#    - libiberty-dev
+#script:
+#- cargo build --verbose --all
+#- cargo test --verbose --all
+
+# Codecov
+
 #after_success: |
 #  wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
 #  tar xzf master.tar.gz &&
