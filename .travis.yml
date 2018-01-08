@@ -1,31 +1,31 @@
 # Travis
 
-#language: rust
-#sudo: false
-#cache: cargo
-#dist: trusty
-#os:
-#- linux
-#rust:
-#- nightly
-#env:
-#  global:
-#  - RUSTFLAGS="-C link-dead-code"
-#addons:
-#  apt:
-#    packages:
-#    - libcurl4-openssl-dev
-#    - libssl-dev
-#    - openssl
-#    - libelf-dev
-#    - libdw-dev
-#    - cmake
-#    - gcc
-#    - binutils-dev
-#    - libiberty-dev
-#script:
-#- cargo build --verbose --all
-#- cargo test --verbose --all
+language: rust
+sudo: false
+cache: cargo
+dist: trusty
+os:
+- linux
+rust:
+- nightly
+env:
+  global:
+  - RUSTFLAGS="-C link-dead-code"
+addons:
+  apt:
+    packages:
+    - libcurl4-openssl-dev
+    - libssl-dev
+    - openssl
+    - libelf-dev
+    - libdw-dev
+    - cmake
+    - gcc
+    - binutils-dev
+    - libiberty-dev
+script:
+- cargo build --verbose --all
+- cargo test --verbose --all
 
 # Codecov
 
