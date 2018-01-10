@@ -9,6 +9,7 @@ authors = ["Justin Rhude <justin.rhude52@gmail.com>"]
 kankyo = "0.1"
 log = "0.3"
 requests = "0.0.30"
+lazy_static = "1.0.0"
 
 [dependencies.serenity]
 git = "https://github.com/zeyla/serenity.git"

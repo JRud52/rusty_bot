@@ -2,7 +2,11 @@ use requests;
 use requests::StatusCode;
 use requests::ToJson;
 
-const BLIZZARD_API_KEY: &'static str = env!("BLIZZARD_API_KEY");
+use std::env;
+
+lazy_static! {
+    static ref BLIZZARD_API_KEY: String = env::var("BLIZZARD_API_KEY").unwrap();
+}
 
 /// Creates a URI that accesses the Blizzard WoW API. Args must be in the format KEY=VALUE
 fn wow_uri(endpoint: &'static str, args: Vec<String>) -> String {
@@ -12,7 +16,10 @@ fn wow_uri(endpoint: &'static str, args: Vec<String>) -> String {
         formatted_args += &format!("&{}", arg);
     }
 
-    return format!("https://us.api.battle.net/wow/{}?locale=en_US{}&apikey={}", endpoint, formatted_args, BLIZZARD_API_KEY);
+    return format!(
+        "https://us.api.battle.net/wow/{}?locale=en_US{}&apikey={}",
+        endpoint, formatted_args, *BLIZZARD_API_KEY
+    );
 }
 
 command!(realm(_ctx, msg, args) {
