@@ -1,5 +1,3 @@
-# Travis
-
 language: rust
 sudo: false
 cache: cargo
@@ -8,9 +6,11 @@ os:
 - linux
 rust:
 - nightly
+
 env:
   global:
   - RUSTFLAGS="-C link-dead-code"
+
 addons:
   apt:
     packages:
@@ -23,33 +23,20 @@ addons:
     - gcc
     - binutils-dev
     - libiberty-dev
+
+deploy:
+  provider: gae
+  keyfile: ~/rusty-bot-109e4ec25dbd.json
+  project: rusty_bot
+  skip:_cleanup: true
+  on:
+    branch: master
+
 script:
 - cargo build --verbose --all
 - cargo test --verbose --all
 
-# Codecov
-
-#after_success: |
-#  wget https://github.com/SimonKagstrom/kcov/archive/master.tar.gz &&
-#  tar xzf master.tar.gz &&
-#  cd kcov-master &&
-#  mkdir build &&
-#  cd build &&
-#  cmake .. &&
-#  make &&
-#  make install DESTDIR=../../kcov-build &&
-#  cd ../.. &&
-#  rm -rf kcov-master &&
-#  for file in target/debug/*[^\.d]; do mkdir -p "target/cov/$(basename $file)"; ./kcov-build/usr/local/bin/kcov --exclude-pattern=/.cargo,/usr/lib --verify "target/cov/$(basename $file)" "$file"; done &&
-#  bash <(curl -s https://codecov.io/bash) &&
-#  echo "Uploaded code coverage"
-
-#deploy:
-#  provider: heroku
-#  skip_cleanup: true
-#  api_key:
-#    secure: edM0eaeZ5oeowByvWF1ovBgUmZns7v9+XBav4q2/WC4aOY6ypYB9Aqv+frGkIOLtp4i9y/GKWe6H9rXvbN5OR3iG98KuydWkZK3UIRSzt5QZcPIstkcQDH5K0687VMp9cQOqxcnYTAQdnnmMwkgBVN4TSLWiZ0iHA7u6wMZ6FlPSN9up4VND6SEU/K264KipOPLbWo6EDVunk7acaKi3+n+nLEi/INtPVvlxF2ko/Q3pfTyHD2iyGV2pP7gG+Xm5EPkbiNpW8Ndu6/Lhc1qumPhp9QfQaipN9Yhq0hR3f2glCPu5r7Av24CS0rWvbuQbQltNJmsGJruDTcIzPMx0m5dRBS84tJEtOCCKSfLG2j+C/VMaBLE0VCeaSINVA3OWpOzWRVS72rEUjw3V1dJnC7UBUXCikFIaut/KGZrRXBlNNgDqbDCmlun2sWtnq4SKAX5gkv57AI9diJvk3QZnhlqSWvW0AzlokZQtzQP9RxsLhcwP8H9qc6qOVeTkY+O6/7G1YBYh6arTt+icfkWMa4ySLvea3SR3NDoOLe8hJwpFjd94ORIX9MH0/mBJHa23SieY9jtZbbsIQRYhQinlTZQtdzcjNhSj12hQQO3OSO8GnjgMD8tJ2VivrHq2fHmecYyHGhhM+TR6f2bX+1wJxbzuRoFWsUF2FvRrSlFYqCA=
-#  app: rusty-bot-discord
-#  on:
-#    branch: master
-
+before_install:
+- openssl aes-256-cbc -K $encrypted_38e93b3f580e_key -iv $encrypted_38e93b3f580e_iv
+  -in rusty-bot-109e4ec25dbd.json.enc -out ~/rusty-bot-109e4ec25dbd.json
+  -d
