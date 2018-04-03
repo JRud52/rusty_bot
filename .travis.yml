@@ -45,13 +45,12 @@ before_install:
     fi
   - mkdir -p lib
   # Here we use the decrypted service account credentials to authenticate the command line tool
-  - gcloud auth activate-service-account --key-file rusty-bot-109e4ec25dbd.json
+  - gcloud auth activate-service-account configure-docker --key-file rusty-bot-109e4ec25dbd.json
   - ssh-keygen -q -N "" -f ~/.ssh/google_compute_engine
   # [END auth]
 install:
   # Set the correct project to deploy to
   - gcloud config set project rusty-bot
-  # - ssh-keygen -q -N "" -f ~/.ssh/google_compute_engine
 
   - docker build -t rusty_bot_image .
   - docker tag rusty_bot_image gcr.io/my-project/rusty_bot_image
