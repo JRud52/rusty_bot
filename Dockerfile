@@ -13,6 +13,6 @@ RUN mkdir -p $SOURCES
 ADD ./ $SOURCES
 
 WORKDIR $SOURCES
-RUN cargo build --release
+RUN cargo build --release --verbose
 
 CMD ./target/release/rusty_bot
