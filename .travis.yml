@@ -1,5 +1,9 @@
 language: rust
-cache: cargo
+
+cache:
+  - cargo
+  directories:
+    - "$HOME/google-cloud-sdk/"
 rust:
   - nightly
 sudo: required
@@ -8,14 +12,57 @@ services:
   - docker
 
 before_install:
-  - docker build .
-  - openssl aes-256-cbc -K $encrypted_38e93b3f580e_key -iv $encrypted_38e93b3f580e_iv -in rusty-bot-109e4ec25dbd.json.enc -out ~/rusty-bot-109e4ec25dbd.json -d
+  - ssh-keygen -q -N "" -f ~/.ssh/google_compute_engine
+  - docker build -t rusty_bot_image .
+  - docker push
 
-deploy:
-  provider: gae
-  keyfile: ~/rusty-bot-109e4ec25dbd.json
-  project: rusty-bot
-  skip_cleanup: true
-  on:
-    branch: master
-  docker_build: local
+  # - openssl aes-256-cbc -K $encrypted_38e93b3f580e_key -iv $encrypted_38e93b3f580e_iv -in rusty-bot-109e4ec25dbd.json.enc -out ~/rusty-bot-109e4ec25dbd.json -d
+
+# deploy:
+#   provider: gae
+#   keyfile: ~/rusty-bot-109e4ec25dbd.json
+#   project: rusty-bot
+#   skip_cleanup: true
+#   on:
+#     branch: master
+#   docker_build: local
+
+
+
+
+
+env:
+# Make sure gcloud command is on our PATH and the App Engine SDK is in the Python path
+- GAE_PYTHONPATH=${HOME}/.cache/google_appengine PATH=$PATH:${HOME}/google-cloud-sdk/bin PYTHONPATH=${PYTHONPATH}:${GAE_PYTHONPATH} CLOUDSDK_CORE_DISABLE_PROMPTS=1
+before_install:
+# Install Google App Engine Python SDK
+- if [ ! -d "${GAE_PYTHONPATH}" ]; then
+    python scripts/fetch_gae_sdk.py $(dirname "${GAE_PYTHONPATH}");
+  fi
+# [START auth]
+# Decrypt the credentials we added to the repo using the key we added with the Travis command line tool
+- openssl aes-256-cbc -K $encrypted_38e93b3f580e_key -iv $encrypted_38e93b3f580e_iv -in rusty-bot-109e4ec25dbd.json.enc -out rusty-bot-109e4ec25dbd.json -d
+# If the SDK is not already cached, download it and unpack it
+- if [ ! -d ${HOME}/google-cloud-sdk ]; then
+     curl https://sdk.cloud.google.com | bash;
+  fi
+- mkdir -p lib
+# Here we use the decrypted service account credentials to authenticate the command line tool
+- gcloud auth activate-service-account --key-file rusty-bot-109e4ec25dbd.json
+- ssh-keygen -q -N "" -f ~/.ssh/google_compute_engine
+# [END auth]
+install:
+# Set the correct project to deploy to
+- gcloud config set project rusty-bot
+# - gcloud -q components update gae-python
+# Install the Python dependencies
+# - pip install -r requirements.txt -t lib/
+script:
+# Run the unit tests
+# - python test_main.py
+# [START deploy]
+# Deploy the app
+- gcloud -q app deploy
+# Run and end to end test
+# - python e2e_test.py
+# [END deploy]
