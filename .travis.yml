@@ -27,7 +27,7 @@ addons:
 deploy:
   provider: gae
   keyfile: ~/rusty-bot-109e4ec25dbd.json
-  project: rusty_bot
+  project: rusty-bot
   skip_cleanup: true
   on:
     branch: master
