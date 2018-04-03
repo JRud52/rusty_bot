@@ -28,7 +28,7 @@ deploy:
   provider: gae
   keyfile: ~/rusty-bot-109e4ec25dbd.json
   project: rusty_bot
-  skip:_cleanup: true
+  skip_cleanup: true
   on:
     branch: master
 
