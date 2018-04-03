@@ -2,6 +2,14 @@ language: rust
 cache: cargo
 rust:
   - nightly
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build .
+  - openssl aes-256-cbc -K $encrypted_38e93b3f580e_key -iv $encrypted_38e93b3f580e_iv -in rusty-bot-109e4ec25dbd.json.enc -out ~/rusty-bot-109e4ec25dbd.json -d
 
 deploy:
   provider: gae
@@ -11,13 +19,3 @@ deploy:
   on:
     branch: master
   docker_build: local
-
-before_install:
-- openssl aes-256-cbc -K $encrypted_38e93b3f580e_key -iv $encrypted_38e93b3f580e_iv
-  -in rusty-bot-109e4ec25dbd.json.enc -out ~/rusty-bot-109e4ec25dbd.json
-  -d
-
-sudo: required
-
-services:
-  - docker
