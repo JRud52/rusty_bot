@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 """Fetch the most recent GAE SDK and decompress it in the current directory.
-Usage:
-    fetch_gae_sdk.py [<dest_dir>]
-Current releases are listed here:
-    https://www.googleapis.com/storage/v1/b/appengine-sdks/o?prefix=featured
 """
 
 import json
@@ -79,4 +75,4 @@ def main(argv):
         return 1
 
 if __name__ == '__main__':
-sys.exit(main(sys.argv[:]))
+    sys.exit(main(sys.argv[:]))
