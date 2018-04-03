@@ -1,4 +1,6 @@
-language: rust
+language: 
+  - rust
+  - python
 
 cache:
   cargo: true
@@ -15,6 +17,8 @@ before_install:
   - ssh-keygen -q -N "" -f ~/.ssh/google_compute_engine
   - docker build -t rusty_bot_image .
   - docker push
+
+
 
   # - openssl aes-256-cbc -K $encrypted_38e93b3f580e_key -iv $encrypted_38e93b3f580e_iv -in rusty-bot-109e4ec25dbd.json.enc -out ~/rusty-bot-109e4ec25dbd.json -d
 
