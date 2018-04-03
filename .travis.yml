@@ -45,7 +45,8 @@ before_install:
     fi
   - mkdir -p lib
   # Here we use the decrypted service account credentials to authenticate the command line tool
-  - gcloud auth activate-service-account configure-docker --key-file rusty-bot-109e4ec25dbd.json
+  - gcloud auth activate-service-account --key-file rusty-bot-109e4ec25dbd.json
+  - gcloud auth configure-docker --key-file rusty-bot-109e4ec25dbd.json
   - ssh-keygen -q -N "" -f ~/.ssh/google_compute_engine
   # [END auth]
 install:
